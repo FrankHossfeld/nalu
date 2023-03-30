@@ -56,6 +56,10 @@ jobs:
           path: target/surefire-reports/
   owasp:
     runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
     needs: build
     services:
       owasp-db:
