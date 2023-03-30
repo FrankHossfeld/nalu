@@ -52,34 +52,34 @@ jobs:
         with:
           name: surefire-report
           path: target/surefire-reports/
-    owasp:
-      runs-on: ubuntu-latest
-      needs: build
-      services:
-        owasp-db:
-          image: philkohl/owasp-maven-action:latest
-          options: --entrypoint /bin/sh --name owasp-db --hostname owasp-db
-      steps:
-        - uses: actions/setup-java@v3
-          with:
-            distribution: adopt
-            java-version: '8'
-            cache: maven
-        - name: Copy owasp database from container to runner
-          run: docker cp $(docker ps -aqf "name=owasp-db"):/dependency-check/data ./dependency-checker-db/
-        - name: OWASP Check
-          run: |
-            mvn org.owasp:dependency-check-maven:check \
-            -DdataDirectory=./dependency-checker-db \
-            -DfailBuildOnCVSS=11 \
-            -Dodc.outputDirectory=reports \
-            -Dformat=HTML \
-            -DautoUpdate=false \
-            -DsuppressionFiles=./owasp/owasp-suppressions.xml \
-            -s ./.github/workflows/settings.xml
-        - name: Upload OWASP results
-          if: always()
-          uses: actions/upload-artifact@master
-          with:
-            name: OWASP report
-            path: ${{github.workspace}}/reports
+  owasp:
+    runs-on: ubuntu-latest
+    needs: build
+    services:
+      owasp-db:
+        image: philkohl/owasp-maven-action:latest
+        options: --entrypoint /bin/sh --name owasp-db --hostname owasp-db
+    steps:
+      - uses: actions/setup-java@v3
+        with:
+          distribution: adopt
+          java-version: '8'
+          cache: maven
+      - name: Copy owasp database from container to runner
+        run: docker cp $(docker ps -aqf "name=owasp-db"):/dependency-check/data ./dependency-checker-db/
+      - name: OWASP Check
+        run: |
+          mvn org.owasp:dependency-check-maven:check \
+          -DdataDirectory=./dependency-checker-db \
+          -DfailBuildOnCVSS=11 \
+          -Dodc.outputDirectory=reports \
+          -Dformat=HTML \
+          -DautoUpdate=false \
+          -DsuppressionFiles=./owasp/owasp-suppressions.xml \
+          -s ./.github/workflows/settings.xml
+      - name: Upload OWASP results
+        if: always()
+        uses: actions/upload-artifact@master
+        with:
+          name: OWASP report
+          path: ${{github.workspace}}/reports
