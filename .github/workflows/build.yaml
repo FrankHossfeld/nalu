@@ -48,7 +48,7 @@ jobs:
           java-version: '8'
           cache: maven
       - name: Test with Maven
-        run: mvn test -ntp -s
+        run: mvn test -ntp
       - uses: actions/upload-artifact@v3
         if: failure()
         with:
