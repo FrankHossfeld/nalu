@@ -86,8 +86,7 @@ jobs:
           -Dodc.outputDirectory=reports \
           -Dformat=HTML \
           -DautoUpdate=false \
-          -DsuppressionFiles=./owasp/owasp-suppressions.xml \
-          -s ./.github/workflows/settings.xml
+          -DsuppressionFiles=./owasp/owasp-suppressions.xml
       - name: Upload OWASP results
         if: always()
         uses: actions/upload-artifact@master
